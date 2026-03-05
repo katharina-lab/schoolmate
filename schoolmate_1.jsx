@@ -1,0 +1,574 @@
+import { useState, useEffect } from "react";
+
+// ─── Mock Data ────────────────────────────────────────────────────────────────
+const MOCK_ACTIVITY = [
+  { id: 1, time: "Today, 09:14", type: "FILLED", title: "Field Trip Permission — London Zoo", detail: "Form filled and saved to Desktop", icon: "✓", color: "#22c55e" },
+  { id: 2, time: "Today, 08:51", type: "SKIPPED", title: "School Newsletter — March Edition", detail: "Newsletter ignored as per preferences", icon: "—", color: "#94a3b8" },
+  { id: 3, time: "Yesterday, 15:30", type: "NOTIFY", title: "Overnight Trip to Edinburgh", detail: "Needs your decision — overnight trips require approval", icon: "!", color: "#f59e0b" },
+  { id: 4, time: "Yesterday, 11:02", type: "FILLED", title: "Sports Day Consent Form", detail: "Form filled with medical info and emergency contact", icon: "✓", color: "#22c55e" },
+  { id: 5, time: "Mon, 09:45", type: "FILLED", title: "Swimming Permission Slip", detail: "Form filled — medical notes included", icon: "✓", color: "#22c55e" },
+];
+
+const PLANS = [
+  { name: "Free", price: "0", period: "forever", features: ["1 child profile", "Check emails every 2 hours", "Up to 10 forms/month", "Desktop PDF output"], cta: "Get started free", highlight: false },
+  { name: "Pro", price: "5", period: "per month", features: ["Up to 3 child profiles", "Check emails every 15 min", "Unlimited forms", "Email notifications", "Priority support"], cta: "Start free trial", highlight: true },
+  { name: "Family", price: "9", period: "per month", features: ["Unlimited child profiles", "Real-time monitoring", "Unlimited forms", "SMS notifications", "Multiple schools"], cta: "Start free trial", highlight: false },
+];
+
+// ─── Components ───────────────────────────────────────────────────────────────
+
+const Logo = ({ size = 22 }) => (
+  <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+    <div style={{
+      width: size + 10, height: size + 10,
+      background: "linear-gradient(135deg, #6366f1, #8b5cf6)",
+      borderRadius: "10px",
+      display: "flex", alignItems: "center", justifyContent: "center",
+      fontSize: size * 0.7, color: "white", fontWeight: 700,
+    }}>S</div>
+    <span style={{ fontSize: size, fontFamily: "'Fraunces', serif", fontWeight: 700, color: "#0f172a", letterSpacing: "-0.5px" }}>
+      School<span style={{ color: "#6366f1" }}>mate</span>
+    </span>
+  </div>
+);
+
+const Badge = ({ children, color = "#6366f1" }) => (
+  <span style={{
+    background: `${color}18`,
+    color,
+    fontSize: "11px",
+    fontWeight: 600,
+    padding: "3px 10px",
+    borderRadius: "999px",
+    letterSpacing: "0.3px",
+  }}>{children}</span>
+);
+
+// ─── Pages ────────────────────────────────────────────────────────────────────
+
+const LandingPage = ({ onSignup }) => {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => { setTimeout(() => setMounted(true), 50); }, []);
+
+  return (
+    <div style={{ minHeight: "100vh", background: "#fafafa" }}>
+
+      {/* Nav */}
+      <nav style={{
+        position: "sticky", top: 0, zIndex: 50,
+        background: "rgba(250,250,250,0.85)",
+        backdropFilter: "blur(12px)",
+        borderBottom: "1px solid rgba(0,0,0,0.06)",
+        padding: "0 40px", height: "60px",
+        display: "flex", alignItems: "center", justifyContent: "space-between",
+      }}>
+        <Logo />
+        <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+          <button onClick={onSignup} style={{ background: "none", border: "none", fontSize: "14px", color: "#64748b", cursor: "pointer", fontFamily: "inherit" }}>Log in</button>
+          <button onClick={onSignup} style={{
+            background: "#6366f1", color: "white", border: "none",
+            padding: "8px 18px", borderRadius: "10px",
+            fontSize: "13px", fontWeight: 600, cursor: "pointer",
+            fontFamily: "inherit",
+          }}>Get started free</button>
+        </div>
+      </nav>
+
+      {/* Hero */}
+      <div style={{
+        maxWidth: "900px", margin: "0 auto",
+        padding: "90px 40px 60px",
+        textAlign: "center",
+        opacity: mounted ? 1 : 0,
+        transform: mounted ? "none" : "translateY(20px)",
+        transition: "all 0.6s cubic-bezier(0.22,1,0.36,1)",
+      }}>
+        <div style={{ marginBottom: "20px" }}>
+          <Badge>AI-powered school admin</Badge>
+        </div>
+        <h1 style={{
+          fontFamily: "'Fraunces', serif",
+          fontSize: "clamp(42px, 6vw, 68px)",
+          fontWeight: 800,
+          color: "#0f172a",
+          lineHeight: 1.1,
+          letterSpacing: "-2px",
+          marginBottom: "22px",
+        }}>
+          Never fill out a<br />
+          <span style={{
+            background: "linear-gradient(135deg, #6366f1, #8b5cf6)",
+            WebkitBackgroundClip: "text",
+            WebkitTextFillColor: "transparent",
+          }}>school form again.</span>
+        </h1>
+        <p style={{
+          fontSize: "18px", color: "#64748b", lineHeight: 1.7,
+          maxWidth: "560px", margin: "0 auto 36px",
+        }}>
+          Schoolmate monitors your inbox, understands school emails, and automatically fills out permission slips and forms — so you don't have to.
+        </p>
+        <div style={{ display: "flex", gap: "12px", justifyContent: "center", flexWrap: "wrap" }}>
+          <button onClick={onSignup} style={{
+            background: "linear-gradient(135deg, #6366f1, #8b5cf6)",
+            color: "white", border: "none",
+            padding: "14px 32px", borderRadius: "14px",
+            fontSize: "15px", fontWeight: 600, cursor: "pointer",
+            fontFamily: "inherit",
+            boxShadow: "0 8px 24px rgba(99,102,241,0.35)",
+          }}>Start for free — no card needed</button>
+          <button onClick={onSignup} style={{
+            background: "white", color: "#0f172a",
+            border: "1px solid rgba(0,0,0,0.1)",
+            padding: "14px 28px", borderRadius: "14px",
+            fontSize: "15px", fontWeight: 500, cursor: "pointer",
+            fontFamily: "inherit",
+          }}>See how it works</button>
+        </div>
+        <p style={{ fontSize: "12px", color: "#94a3b8", marginTop: "14px" }}>
+          Free forever. No credit card. Trusted by 2,400+ parents.
+        </p>
+      </div>
+
+      {/* How it works */}
+      <div style={{ maxWidth: "900px", margin: "0 auto", padding: "40px 40px 80px" }}>
+        <div style={{ textAlign: "center", marginBottom: "48px" }}>
+          <h2 style={{ fontFamily: "'Fraunces', serif", fontSize: "36px", fontWeight: 800, color: "#0f172a", letterSpacing: "-1px" }}>How it works</h2>
+          <p style={{ fontSize: "15px", color: "#64748b", marginTop: "8px" }}>Three steps. Zero effort.</p>
+        </div>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: "24px" }}>
+          {[
+            { step: "01", title: "Connect your email", desc: "Securely link your inbox. We only read school-related emails — nothing else." },
+            { step: "02", title: "Set your preferences", desc: "Tell us your rules once. Always allow field trips, never order school photos, etc." },
+            { step: "03", title: "Relax", desc: "Schoolmate runs in the background, fills forms and saves them to your Desktop." },
+          ].map((s, i) => (
+            <div key={i} style={{
+              background: "white",
+              border: "1px solid rgba(0,0,0,0.07)",
+              borderRadius: "20px",
+              padding: "28px",
+              boxShadow: "0 2px 12px rgba(0,0,0,0.04)",
+            }}>
+              <div style={{
+                fontFamily: "'Fraunces', serif",
+                fontSize: "48px", fontWeight: 800,
+                color: "#e2e8f0", marginBottom: "12px",
+                lineHeight: 1,
+              }}>{s.step}</div>
+              <div style={{ fontSize: "16px", fontWeight: 700, color: "#0f172a", marginBottom: "8px" }}>{s.title}</div>
+              <div style={{ fontSize: "14px", color: "#64748b", lineHeight: 1.6 }}>{s.desc}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Pricing */}
+      <div style={{ background: "white", borderTop: "1px solid rgba(0,0,0,0.06)", borderBottom: "1px solid rgba(0,0,0,0.06)", padding: "80px 40px" }}>
+        <div style={{ maxWidth: "900px", margin: "0 auto" }}>
+          <div style={{ textAlign: "center", marginBottom: "48px" }}>
+            <h2 style={{ fontFamily: "'Fraunces', serif", fontSize: "36px", fontWeight: 800, color: "#0f172a", letterSpacing: "-1px" }}>Simple pricing</h2>
+            <p style={{ fontSize: "15px", color: "#64748b", marginTop: "8px" }}>Start free. Upgrade when you need more.</p>
+          </div>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: "20px" }}>
+            {PLANS.map((plan, i) => (
+              <div key={i} style={{
+                background: plan.highlight ? "linear-gradient(135deg, #6366f1, #8b5cf6)" : "white",
+                border: plan.highlight ? "none" : "1px solid rgba(0,0,0,0.08)",
+                borderRadius: "20px",
+                padding: "28px",
+                color: plan.highlight ? "white" : "#0f172a",
+                boxShadow: plan.highlight ? "0 12px 40px rgba(99,102,241,0.35)" : "0 2px 12px rgba(0,0,0,0.04)",
+                transform: plan.highlight ? "scale(1.03)" : "none",
+              }}>
+                {plan.highlight && <div style={{ fontSize: "11px", fontWeight: 700, letterSpacing: "1px", opacity: 0.8, marginBottom: "12px" }}>MOST POPULAR</div>}
+                <div style={{ fontSize: "18px", fontWeight: 700, marginBottom: "6px" }}>{plan.name}</div>
+                <div style={{ marginBottom: "20px" }}>
+                  <span style={{ fontSize: "40px", fontFamily: "'Fraunces', serif", fontWeight: 800 }}>€{plan.price}</span>
+                  <span style={{ fontSize: "13px", opacity: 0.7 }}> / {plan.period}</span>
+                </div>
+                <div style={{ marginBottom: "24px" }}>
+                  {plan.features.map((f, j) => (
+                    <div key={j} style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "10px", fontSize: "13px", opacity: plan.highlight ? 0.9 : 0.8 }}>
+                      <span style={{ color: plan.highlight ? "white" : "#6366f1", fontWeight: 700 }}>✓</span> {f}
+                    </div>
+                  ))}
+                </div>
+                <button onClick={onSignup} style={{
+                  width: "100%",
+                  background: plan.highlight ? "white" : "#6366f1",
+                  color: plan.highlight ? "#6366f1" : "white",
+                  border: "none", borderRadius: "12px",
+                  padding: "12px", fontSize: "14px", fontWeight: 600,
+                  cursor: "pointer", fontFamily: "inherit",
+                }}>{plan.cta}</button>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Footer */}
+      <div style={{ textAlign: "center", padding: "32px 40px", fontSize: "13px", color: "#94a3b8" }}>
+        © 2026 Schoolmate · Built with Claude AI · Privacy-first
+      </div>
+    </div>
+  );
+};
+
+// ─── Onboarding ───────────────────────────────────────────────────────────────
+
+const OnboardingPage = ({ onComplete }) => {
+  const [step, setStep] = useState(0);
+  const [data, setData] = useState({
+    name: "", email: "", password: "",
+    childName: "", childDOB: "", childClass: "", school: "",
+    allergies: "None", medical: "None", emergencyContact: "",
+    emailAddress: "", emailPassword: "", imapServer: "",
+    prefs: {
+      fieldTrips: true, sports: true, swimming: true,
+      overnightTrips: false, photos: false, newsletters: false,
+      maxCost: "30",
+    }
+  });
+
+  const update = (key, val) => setData(p => ({ ...p, [key]: val }));
+  const updatePref = (key, val) => setData(p => ({ ...p, prefs: { ...p.prefs, [key]: val } }));
+
+  const steps = ["Account", "Your Child", "Preferences", "Email Setup"];
+
+  const inputStyle = {
+    width: "100%", padding: "11px 14px",
+    border: "1px solid #e2e8f0", borderRadius: "10px",
+    fontSize: "14px", fontFamily: "inherit", color: "#0f172a",
+    outline: "none", background: "white",
+    transition: "border-color 0.15s",
+  };
+
+  const labelStyle = { fontSize: "12px", fontWeight: 600, color: "#64748b", letterSpacing: "0.3px", textTransform: "uppercase", marginBottom: "6px", display: "block" };
+
+  const Toggle = ({ checked, onChange }) => (
+    <div onClick={() => onChange(!checked)} style={{
+      width: "42px", height: "24px",
+      background: checked ? "#6366f1" : "#e2e8f0",
+      borderRadius: "999px", cursor: "pointer",
+      position: "relative", transition: "background 0.2s", flexShrink: 0,
+    }}>
+      <div style={{
+        position: "absolute", top: "3px",
+        left: checked ? "21px" : "3px",
+        width: "18px", height: "18px",
+        background: "white", borderRadius: "50%",
+        transition: "left 0.2s",
+        boxShadow: "0 1px 4px rgba(0,0,0,0.15)",
+      }} />
+    </div>
+  );
+
+  const PrefRow = ({ label, desc, prefKey }) => (
+    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "14px 0", borderBottom: "1px solid #f1f5f9" }}>
+      <div>
+        <div style={{ fontSize: "14px", fontWeight: 500, color: "#0f172a" }}>{label}</div>
+        <div style={{ fontSize: "12px", color: "#94a3b8", marginTop: "2px" }}>{desc}</div>
+      </div>
+      <Toggle checked={data.prefs[prefKey]} onChange={v => updatePref(prefKey, v)} />
+    </div>
+  );
+
+  return (
+    <div style={{ minHeight: "100vh", background: "#f8fafc", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "40px 20px" }}>
+      <div style={{ marginBottom: "32px" }}><Logo /></div>
+
+      {/* Progress */}
+      <div style={{ display: "flex", gap: "8px", marginBottom: "32px" }}>
+        {steps.map((s, i) => (
+          <div key={i} style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+            <div style={{
+              width: "28px", height: "28px", borderRadius: "50%",
+              background: i <= step ? "#6366f1" : "#e2e8f0",
+              color: i <= step ? "white" : "#94a3b8",
+              display: "flex", alignItems: "center", justifyContent: "center",
+              fontSize: "12px", fontWeight: 700,
+              transition: "all 0.3s",
+            }}>{i < step ? "✓" : i + 1}</div>
+            <span style={{ fontSize: "12px", color: i === step ? "#6366f1" : "#94a3b8", fontWeight: i === step ? 600 : 400, display: i === steps.length - 1 && "none" || "block" }}>{s}</span>
+            {i < steps.length - 1 && <div style={{ width: "24px", height: "1px", background: i < step ? "#6366f1" : "#e2e8f0" }} />}
+          </div>
+        ))}
+      </div>
+
+      {/* Card */}
+      <div style={{ background: "white", borderRadius: "24px", padding: "36px", width: "100%", maxWidth: "480px", border: "1px solid rgba(0,0,0,0.07)", boxShadow: "0 4px 24px rgba(0,0,0,0.06)" }}>
+
+        {step === 0 && (
+          <div>
+            <h2 style={{ fontFamily: "'Fraunces', serif", fontSize: "26px", fontWeight: 800, color: "#0f172a", marginBottom: "6px" }}>Create your account</h2>
+            <p style={{ fontSize: "14px", color: "#94a3b8", marginBottom: "24px" }}>Free forever. No credit card needed.</p>
+            <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+              <div><label style={labelStyle}>Your name</label><input style={inputStyle} placeholder="Anna Müller" value={data.name} onChange={e => update("name", e.target.value)} /></div>
+              <div><label style={labelStyle}>Email address</label><input style={inputStyle} placeholder="anna@example.com" value={data.email} onChange={e => update("email", e.target.value)} /></div>
+              <div><label style={labelStyle}>Password</label><input style={inputStyle} type="password" placeholder="••••••••" value={data.password} onChange={e => update("password", e.target.value)} /></div>
+            </div>
+          </div>
+        )}
+
+        {step === 1 && (
+          <div>
+            <h2 style={{ fontFamily: "'Fraunces', serif", fontSize: "26px", fontWeight: 800, color: "#0f172a", marginBottom: "6px" }}>Your child's details</h2>
+            <p style={{ fontSize: "14px", color: "#94a3b8", marginBottom: "24px" }}>Used to fill out forms automatically.</p>
+            <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+              <div><label style={labelStyle}>Child's full name</label><input style={inputStyle} placeholder="Sophie Müller" value={data.childName} onChange={e => update("childName", e.target.value)} /></div>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
+                <div><label style={labelStyle}>Date of birth</label><input style={inputStyle} placeholder="12.03.2015" value={data.childDOB} onChange={e => update("childDOB", e.target.value)} /></div>
+                <div><label style={labelStyle}>Class</label><input style={inputStyle} placeholder="3b" value={data.childClass} onChange={e => update("childClass", e.target.value)} /></div>
+              </div>
+              <div><label style={labelStyle}>School name</label><input style={inputStyle} placeholder="Wellington School" value={data.school} onChange={e => update("school", e.target.value)} /></div>
+              <div><label style={labelStyle}>Allergies</label><input style={inputStyle} placeholder="None, or list them" value={data.allergies} onChange={e => update("allergies", e.target.value)} /></div>
+              <div><label style={labelStyle}>Medical notes</label><input style={inputStyle} placeholder="None, or list them" value={data.medical} onChange={e => update("medical", e.target.value)} /></div>
+              <div><label style={labelStyle}>Emergency contact</label><input style={inputStyle} placeholder="Dad: 0176 12345678" value={data.emergencyContact} onChange={e => update("emergencyContact", e.target.value)} /></div>
+            </div>
+          </div>
+        )}
+
+        {step === 2 && (
+          <div>
+            <h2 style={{ fontFamily: "'Fraunces', serif", fontSize: "26px", fontWeight: 800, color: "#0f172a", marginBottom: "6px" }}>Set your preferences</h2>
+            <p style={{ fontSize: "14px", color: "#94a3b8", marginBottom: "24px" }}>Schoolmate will follow these rules automatically.</p>
+            <PrefRow label="Field trips" desc="Always fill out permission slips" prefKey="fieldTrips" />
+            <PrefRow label="Sports events" desc="Always allow participation" prefKey="sports" />
+            <PrefRow label="Swimming" desc="Include medical info automatically" prefKey="swimming" />
+            <PrefRow label="Overnight trips" desc="Ask me first before filling" prefKey="overnightTrips" />
+            <PrefRow label="School photos" desc="Order class photos automatically" prefKey="photos" />
+            <PrefRow label="Newsletters" desc="Skip newsletters completely" prefKey="newsletters" />
+            <div style={{ paddingTop: "14px" }}>
+              <label style={labelStyle}>Max cost to auto-approve (€)</label>
+              <input style={inputStyle} type="number" placeholder="30" value={data.prefs.maxCost} onChange={e => updatePref("maxCost", e.target.value)} />
+              <p style={{ fontSize: "12px", color: "#94a3b8", marginTop: "6px" }}>Forms with costs above this amount will need your approval</p>
+            </div>
+          </div>
+        )}
+
+        {step === 3 && (
+          <div>
+            <h2 style={{ fontFamily: "'Fraunces', serif", fontSize: "26px", fontWeight: 800, color: "#0f172a", marginBottom: "6px" }}>Connect your email</h2>
+            <p style={{ fontSize: "14px", color: "#94a3b8", marginBottom: "24px" }}>We only read school emails. Your password is encrypted and never shared.</p>
+            <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+              <div><label style={labelStyle}>Email address</label><input style={inputStyle} placeholder="you@example.com" value={data.emailAddress} onChange={e => update("emailAddress", e.target.value)} /></div>
+              <div><label style={labelStyle}>App-specific password</label><input style={inputStyle} type="password" placeholder="xxxx-xxxx-xxxx-xxxx" value={data.emailPassword} onChange={e => update("emailPassword", e.target.value)} /></div>
+              <div>
+                <label style={labelStyle}>Email provider</label>
+                <select style={{ ...inputStyle }} onChange={e => update("imapServer", e.target.value)} value={data.imapServer}>
+                  <option value="">Select your provider...</option>
+                  <option value="imap.mail.apple.com">Apple Mail / iCloud</option>
+                  <option value="imap.gmail.com">Gmail</option>
+                  <option value="imap.strato.de">Strato</option>
+                  <option value="imap.outlook.com">Outlook</option>
+                  <option value="imap.gmx.net">GMX</option>
+                  <option value="imap.web.de">Web.de</option>
+                  <option value="imap.t-online.de">T-Online</option>
+                </select>
+              </div>
+            </div>
+            <div style={{ marginTop: "20px", background: "#f0fdf4", border: "1px solid #bbf7d0", borderRadius: "12px", padding: "14px 16px" }}>
+              <div style={{ fontSize: "13px", color: "#166534", fontWeight: 500 }}>Your data is safe</div>
+              <div style={{ fontSize: "12px", color: "#16a34a", marginTop: "4px", lineHeight: 1.5 }}>
+                Your email password is encrypted end-to-end. We never read personal emails — only school-related ones.
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Buttons */}
+        <div style={{ display: "flex", gap: "10px", marginTop: "28px" }}>
+          {step > 0 && (
+            <button onClick={() => setStep(s => s - 1)} style={{
+              flex: 1, background: "none", border: "1px solid #e2e8f0",
+              borderRadius: "12px", padding: "12px",
+              fontSize: "14px", fontWeight: 500, cursor: "pointer",
+              fontFamily: "inherit", color: "#64748b",
+            }}>Back</button>
+          )}
+          <button onClick={() => step < 3 ? setStep(s => s + 1) : onComplete(data)} style={{
+            flex: 2,
+            background: "linear-gradient(135deg, #6366f1, #8b5cf6)",
+            color: "white", border: "none", borderRadius: "12px",
+            padding: "12px", fontSize: "14px", fontWeight: 600,
+            cursor: "pointer", fontFamily: "inherit",
+          }}>{step < 3 ? "Continue" : "Launch Schoolmate"}</button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// ─── Dashboard ────────────────────────────────────────────────────────────────
+
+const Dashboard = ({ userData }) => {
+  const [tab, setTab] = useState("activity");
+  const name = userData?.name || "Anna";
+  const childName = userData?.childName || "Sophie";
+
+  const stats = [
+    { label: "Forms filled", value: "23", sub: "this month" },
+    { label: "Time saved", value: "4.2h", sub: "estimated" },
+    { label: "Emails processed", value: "61", sub: "this month" },
+    { label: "Pending", value: "1", sub: "needs your input" },
+  ];
+
+  return (
+    <div style={{ minHeight: "100vh", background: "#f8fafc", fontFamily: "inherit" }}>
+
+      {/* Nav */}
+      <div style={{
+        background: "white", borderBottom: "1px solid rgba(0,0,0,0.07)",
+        padding: "0 32px", height: "60px",
+        display: "flex", alignItems: "center", justifyContent: "space-between",
+        position: "sticky", top: 0, zIndex: 50,
+      }}>
+        <Logo size={18} />
+        <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+            <div style={{ width: "7px", height: "7px", borderRadius: "50%", background: "#22c55e" }} />
+            <span style={{ fontSize: "12px", color: "#64748b" }}>Agent running</span>
+          </div>
+          <div style={{
+            width: "32px", height: "32px", borderRadius: "50%",
+            background: "linear-gradient(135deg, #6366f1, #8b5cf6)",
+            display: "flex", alignItems: "center", justifyContent: "center",
+            color: "white", fontSize: "13px", fontWeight: 700,
+          }}>{name[0]}</div>
+        </div>
+      </div>
+
+      <div style={{ maxWidth: "960px", margin: "0 auto", padding: "32px 24px" }}>
+
+        {/* Header */}
+        <div style={{ marginBottom: "28px" }}>
+          <h1 style={{ fontFamily: "'Fraunces', serif", fontSize: "28px", fontWeight: 800, color: "#0f172a", letterSpacing: "-0.5px" }}>
+            Good morning, {name.split(" ")[0]}
+          </h1>
+          <p style={{ fontSize: "14px", color: "#94a3b8", marginTop: "4px" }}>
+            Schoolmate is watching {childName}'s school emails.
+          </p>
+        </div>
+
+        {/* Stats */}
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: "14px", marginBottom: "24px" }}>
+          {stats.map((s, i) => (
+            <div key={i} style={{ background: "white", border: "1px solid rgba(0,0,0,0.07)", borderRadius: "16px", padding: "18px 20px", boxShadow: "0 1px 4px rgba(0,0,0,0.04)" }}>
+              <div style={{ fontSize: "11px", color: "#94a3b8", fontWeight: 500, textTransform: "uppercase", letterSpacing: "0.5px", marginBottom: "8px" }}>{s.label}</div>
+              <div style={{ fontFamily: "'Fraunces', serif", fontSize: "28px", fontWeight: 800, color: i === 3 ? "#f59e0b" : "#0f172a", letterSpacing: "-0.5px" }}>{s.value}</div>
+              <div style={{ fontSize: "12px", color: "#94a3b8", marginTop: "3px" }}>{s.sub}</div>
+            </div>
+          ))}
+        </div>
+
+        {/* Tabs */}
+        <div style={{ display: "flex", gap: "4px", marginBottom: "16px", background: "white", padding: "4px", borderRadius: "12px", border: "1px solid rgba(0,0,0,0.07)", width: "fit-content" }}>
+          {["activity", "settings", "upgrade"].map(t => (
+            <button key={t} onClick={() => setTab(t)} style={{
+              padding: "7px 18px", borderRadius: "9px", border: "none",
+              background: tab === t ? "#6366f1" : "transparent",
+              color: tab === t ? "white" : "#64748b",
+              fontSize: "13px", fontWeight: 500, cursor: "pointer",
+              fontFamily: "inherit", transition: "all 0.15s",
+              textTransform: "capitalize",
+            }}>{t}</button>
+          ))}
+        </div>
+
+        {/* Activity Tab */}
+        {tab === "activity" && (
+          <div style={{ background: "white", border: "1px solid rgba(0,0,0,0.07)", borderRadius: "20px", overflow: "hidden", boxShadow: "0 1px 4px rgba(0,0,0,0.04)" }}>
+            <div style={{ padding: "18px 22px", borderBottom: "1px solid #f1f5f9", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+              <div style={{ fontWeight: 600, fontSize: "15px", color: "#0f172a" }}>Recent activity</div>
+              <Badge color="#6366f1">Live</Badge>
+            </div>
+            {MOCK_ACTIVITY.map((item, i) => (
+              <div key={item.id} style={{
+                display: "flex", alignItems: "center", gap: "16px",
+                padding: "16px 22px",
+                borderBottom: i < MOCK_ACTIVITY.length - 1 ? "1px solid #f8fafc" : "none",
+              }}>
+                <div style={{
+                  width: "36px", height: "36px", borderRadius: "10px",
+                  background: `${item.color}18`,
+                  color: item.color,
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                  fontSize: "15px", fontWeight: 700, flexShrink: 0,
+                }}>{item.icon}</div>
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontSize: "14px", fontWeight: 500, color: "#0f172a" }}>{item.title}</div>
+                  <div style={{ fontSize: "12px", color: "#94a3b8", marginTop: "2px" }}>{item.detail}</div>
+                </div>
+                <div style={{ textAlign: "right", flexShrink: 0 }}>
+                  <Badge color={item.color}>{item.type}</Badge>
+                  <div style={{ fontSize: "11px", color: "#94a3b8", marginTop: "4px" }}>{item.time}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* Settings Tab */}
+        {tab === "settings" && (
+          <div style={{ background: "white", border: "1px solid rgba(0,0,0,0.07)", borderRadius: "20px", padding: "24px", boxShadow: "0 1px 4px rgba(0,0,0,0.04)" }}>
+            <div style={{ fontWeight: 600, fontSize: "15px", color: "#0f172a", marginBottom: "20px" }}>Child profile</div>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
+              {[["Name", childName], ["Date of birth", userData?.childDOB || "—"], ["Class", userData?.childClass || "—"], ["School", userData?.school || "—"], ["Allergies", userData?.allergies || "None"], ["Medical notes", userData?.medical || "None"]].map(([l, v]) => (
+                <div key={l} style={{ padding: "14px 16px", background: "#f8fafc", borderRadius: "12px" }}>
+                  <div style={{ fontSize: "11px", color: "#94a3b8", fontWeight: 500, textTransform: "uppercase", letterSpacing: "0.4px", marginBottom: "5px" }}>{l}</div>
+                  <div style={{ fontSize: "14px", fontWeight: 500, color: "#0f172a" }}>{v}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Upgrade Tab */}
+        {tab === "upgrade" && (
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: "16px" }}>
+            {PLANS.map((plan, i) => (
+              <div key={i} style={{
+                background: plan.highlight ? "linear-gradient(135deg, #6366f1, #8b5cf6)" : "white",
+                border: plan.highlight ? "none" : "1px solid rgba(0,0,0,0.08)",
+                borderRadius: "20px", padding: "24px",
+                color: plan.highlight ? "white" : "#0f172a",
+                boxShadow: plan.highlight ? "0 12px 40px rgba(99,102,241,0.3)" : "0 1px 4px rgba(0,0,0,0.04)",
+              }}>
+                <div style={{ fontSize: "16px", fontWeight: 700, marginBottom: "4px" }}>{plan.name}</div>
+                <div style={{ marginBottom: "18px" }}>
+                  <span style={{ fontSize: "36px", fontFamily: "'Fraunces', serif", fontWeight: 800 }}>€{plan.price}</span>
+                  <span style={{ fontSize: "12px", opacity: 0.7 }}> / {plan.period}</span>
+                </div>
+                {plan.features.map((f, j) => (
+                  <div key={j} style={{ fontSize: "13px", marginBottom: "8px", opacity: 0.85, display: "flex", gap: "6px" }}>
+                    <span style={{ color: plan.highlight ? "white" : "#6366f1", fontWeight: 700 }}>✓</span> {f}
+                  </div>
+                ))}
+                <button style={{
+                  width: "100%", marginTop: "16px",
+                  background: plan.highlight ? "white" : "#6366f1",
+                  color: plan.highlight ? "#6366f1" : "white",
+                  border: "none", borderRadius: "10px",
+                  padding: "10px", fontSize: "13px", fontWeight: 600,
+                  cursor: "pointer", fontFamily: "inherit",
+                }}>{plan.name === "Free" ? "Current plan" : "Upgrade"}</button>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+// ─── App ──────────────────────────────────────────────────────────────────────
+
+export default function App() {
+  const [page, setPage] = useState("landing");
+  const [userData, setUserData] = useState(null);
+
+  if (page === "landing") return <LandingPage onSignup={() => setPage("onboarding")} />;
+  if (page === "onboarding") return <OnboardingPage onComplete={data => { setUserData(data); setPage("dashboard"); }} />;
+  if (page === "dashboard") return <Dashboard userData={userData} />;
+}
